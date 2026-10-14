@@ -16,4 +16,4 @@ if not (work / '.ready').exists():
         shutil.copyfile(base / (kind + '_model.keras'), work / 'part3_harness/results/current' / (kind + '_model.keras'))
     (work / '.ready').touch()
 sys.path.insert(0, str(work))
-runpy.run_path(str(work / 'dashboard.py'), run_name='__main__')
+runpy.run_path(str(base / 'dashboard.py'), run_name='__main__')
