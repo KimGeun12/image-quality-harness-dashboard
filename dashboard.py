@@ -54,8 +54,8 @@ def bars(records, category, value, color='#369b95', percent=False):
         x=alt.X(f'{value}:Q',title=value,scale=alt.Scale(domain=[0,100]) if percent else alt.Scale(zero=True),
                   axis=alt.Axis(format='.0f' if percent else ',d',tickCount=4)),
         tooltip=[alt.Tooltip(f'{category}:N'),alt.Tooltip(f'{value}:Q',format='.2f' if percent else ',d')])
-    chart=(base.mark_bar(color=color,size=26)+base.mark_text(align='left',dx=6,fontSize=14).encode(
-        text=alt.Text(f'{value}:Q',format='.2f' if percent else ',d'))).properties(height=max(150,len(records)*54))
+    chart=(base.mark_bar(color=color,size=26)+base.mark_text(align='right',dx=-6,fontSize=14,fontWeight='bold',color='#101820').encode(
+        text=alt.Text(f'{value}:Q',format='.2f' if percent else ',d'))).properties(height=max(230,len(records)*65))
     st.altair_chart(chart.configure_axis(labelFontSize=13,titleFontSize=13,labelAngle=0).configure_view(strokeWidth=0),width='stretch')
 
 def csv_download(label,rows,filename):
@@ -96,8 +96,8 @@ def content():
     else:st.caption('Train manifest가 없어 전체 진행률을 계산하지 않습니다.')
     overview,trace,cnn,evidence=st.tabs(['처리 현황','이미지별 제어 흐름','CNN 결과 비교','검증과 해석'])
     with overview:
-        cols=st.columns(4)
         st.subheader('학습용 이미지 정제 결과')
+        cols=st.columns(4)
         cols[0].metric('정제 대상 · 학습용',f"{totals['total_images']:,}장")
         cols[1].metric('문제 탐지',f"{totals['detected_images']:,}장")
         cols[2].metric('품질 통과 · 저장',f"{totals['saved']:,}장")
@@ -129,7 +129,7 @@ def content():
                     y=alt.Y('동물:N',title=None,axis=alt.Axis(labelAngle=0)),
                     x=alt.X('이미지 수:Q',title='이미지 수',axis=alt.Axis(format=',d',tickCount=4)),
                     color=alt.Color('상태:N',scale=alt.Scale(domain=['통과·저장','기준 미달·격리'],range=['#369b95','#d4924d']),legend=alt.Legend(orient='bottom',title=None,labelFontSize=13)),
-                    tooltip=['동물','상태',alt.Tooltip('이미지 수:Q',format=',d')]).properties(height=165)
+                    tooltip=['동물','상태',alt.Tooltip('이미지 수:Q',format=',d')]).properties(height=270)
                 st.altair_chart(chart.configure_axis(labelFontSize=13,titleFontSize=13,labelAngle=0).configure_view(strokeWidth=0),width='stretch')
                 st.dataframe(counts.pivot(index='동물',columns='상태',values='이미지 수').reindex(columns=['통과·저장','기준 미달·격리']),width='stretch')
         audit,_=read_csv(data/'source_audit.csv')
